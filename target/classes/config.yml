@@ -1,0 +1,10 @@
+# If the reward is "Tokens" (case-sensitive), it'll give back the set amount of tokens. Otherwise, you can write the block id.
+# ex "reward type: 42" for iron blocks. Everyone love iron blocks.
+reward type: Tokens
+reward amount: 10
+
+maximum bets per player: 14
+
+# If you don't know what this is, please don't touch.
+# Read more at https://forums.bukkit.org/threads/mcstats-plugin-metrics-r7-easy-advanced-plugin-statistics.77352/
+opt out of metrics: false

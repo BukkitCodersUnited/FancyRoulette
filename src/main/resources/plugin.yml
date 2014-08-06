@@ -1,0 +1,11 @@
+name: FancyRoulette
+main: com.cokoc.fancyroulette.FancyRoulette
+version: 1.0.4
+author: CoKoC
+description: Lets user play on admin-created roulette tables.
+depend: [Vault]
+
+commands:
+  roulette:
+    description: Manages creation of roulettes.
+    usage: /roulette [id] {spinner}
