@@ -1,4 +1,4 @@
-package com.cokoc.fancyroulette;
+package cokoc.fancyroulette;
 
 import java.io.File;
 import java.io.FileOutputStream;

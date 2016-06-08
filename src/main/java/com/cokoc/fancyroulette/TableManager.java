@@ -1,4 +1,4 @@
-package com.cokoc.fancyroulette;
+package cokoc.fancyroulette;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,6 +103,11 @@ public class TableManager extends PersistentManager {
 	
 	public ArrayList<SerializableLocation> getTableTiles(int tableId) {
 		return tilesLocations.get(tableId);
+	}
+	
+	public void clearTableTiles(int tableId) {
+		tilesLocations.remove(tableId);
+		spinnersLocations.remove(tableId);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -1,4 +1,4 @@
-package com.cokoc.fancyroulette;
+package cokoc.fancyroulette;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -12,40 +12,58 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Wool;
-@SuppressWarnings("deprecation")
+
 public class PlayerListener implements Listener {
 	private BetsManager bets = new BetsManager();
 	private ArrayList<Block> spinning = new ArrayList<Block>();
 	FireworkEffectPlayer fire = new FireworkEffectPlayer();
 	
-	@EventHandler (priority = EventPriority.HIGHEST)
-	public void onPlayerBet(BlockPlaceEvent event) {
-		Block block = event.getBlock();
-		if(block.getType().equals(Material.FLOWER_POT)) {
-			Location blockLocation = block.getLocation();
-			Location blockUnderLocation = blockLocation;
-			blockUnderLocation.setY(blockLocation.getY() - 1);
-			Block blockUnder = blockLocation.getWorld().getBlockAt(blockUnderLocation);
-			if(FancyRoulette.instance.tableManager.isBlockTile(blockUnder)) {
-				event.setCancelled(false);
-				int tableId = FancyRoulette.instance.tableManager.getTableId(blockUnder);
-				int maxNumberOfBets = FancyRoulette.instance.getConfig().getInt("maximum bets per player");
-				if(bets.getNumberOfBets(event.getPlayer()) >= maxNumberOfBets) {
-					event.getPlayer().sendMessage(ChatColor.RED + "You cannot have more bets than " + maxNumberOfBets + "!");
-				} event.getPlayer().sendMessage(ChatColor.GOLD + "You placed a bet for " + ChatColor.BOLD + getWoolNameIfWool(blockUnder)
-						+ ChatColor.RESET + " " + ChatColor.GOLD + " on table " + ChatColor.AQUA + tableId + ChatColor.WHITE + "!");
-				bets.addBet(event.getPlayer(), block);
-			}
+	private boolean isToken(ItemStack itemStack) {
+		if(itemStack == null)
+			return false;
+		if(! itemStack.getType().equals(Material.FLOWER_POT_ITEM))
+			return false;
+		if(itemStack.getItemMeta() == null)
+			return false;
+		if(itemStack.getItemMeta().getDisplayName() == null)
+			return false;
+		if(! itemStack.getItemMeta().getDisplayName().contains("Roulette token"))
+			return false;
+		return true;
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public  void onPlayerBetInteract(PlayerInteractEvent event) {
+		ItemStack itemInHand = event.getItem();
+		if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			Block clickedBlock = event.getClickedBlock();
+			if(! FancyRoulette.instance.tableManager.isBlockTile(clickedBlock))
+				return;
+			if(itemInHand == null) {
+				event.getPlayer().sendMessage(ChatColor.GOLD + "You need to have roulette tokens to play the roulette!");
+				return;
+			} else if(! isToken(itemInHand)) {
+				event.getPlayer().sendMessage(ChatColor.RED + "You can only place roulette tokens on roulette tiles!");
+				return;
+			} event.setCancelled(false); // Bypass shit like worldguard.
+			int tableId = FancyRoulette.instance.tableManager.getTableId(clickedBlock);
+			int maxNumberOfBets = FancyRoulette.instance.getConfig().getInt("maximum bets per player");
+			if(bets.getNumberOfBets(event.getPlayer()) >= maxNumberOfBets) {
+				event.getPlayer().sendMessage(ChatColor.RED + "You cannot have more bets than " + maxNumberOfBets + "!");
+			} event.getPlayer().sendMessage(ChatColor.GOLD + "You placed a bet for " + ChatColor.BOLD + getWoolNameIfWool(clickedBlock)
+					+ ChatColor.RESET + " " + ChatColor.GOLD + " on table " + ChatColor.AQUA + tableId + ChatColor.WHITE + "!");
+			bets.addBet(event.getPlayer(), clickedBlock.getRelative(BlockFace.UP));
 		}
 	}
 	
@@ -159,7 +177,6 @@ public class PlayerListener implements Listener {
 			}, (long)(160));
 		}
 	}
-	
 	
 	String getWoolNameIfWool(Block block) {
 		if(block.getType().equals(Material.WOOL)) {

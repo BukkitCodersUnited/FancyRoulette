@@ -1,4 +1,4 @@
-package com.cokoc.fancyroulette;
+package cokoc.fancyroulette;
 
 import java.util.ArrayList;
 import java.util.HashMap;

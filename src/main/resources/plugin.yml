@@ -1,6 +1,6 @@
 name: FancyRoulette
-main: com.cokoc.fancyroulette.FancyRoulette
-version: 1.0.4
+main: cokoc.fancyroulette.FancyRoulette
+version: 1.0.6
 author: CoKoC
 description: Lets user play on admin-created roulette tables.
 depend: [Vault]

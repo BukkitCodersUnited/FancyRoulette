@@ -1,4 +1,4 @@
-package com.cokoc.fancyroulette;
+package cokoc.fancyroulette;
 
 /*
 * Copyright 2011-2013 Tyler Blair. All rights reserved.

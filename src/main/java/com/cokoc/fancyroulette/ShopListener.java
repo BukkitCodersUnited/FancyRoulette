@@ -1,4 +1,4 @@
-package com.cokoc.fancyroulette;
+package cokoc.fancyroulette;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
